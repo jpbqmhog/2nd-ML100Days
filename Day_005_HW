@@ -1,0 +1,11 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 讀取folder資料檔
+df = pd.read_excel(folder)
+
+df.skew()
+df.kurt()
+# histogram
+plt.hist(df)
