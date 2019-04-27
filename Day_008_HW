@@ -1,0 +1,40 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=36)
+import warnings
+warnings.filterwarnings("ignore")
+
+path = 'C:/Users/shelly.yang/Documents/GitHub/2nd-ML100Days/data/'
+df = pd.read_csv(path+'application_train.csv')
+
+# 1 CNT_CHILDREN_GROUP
+nRow = df.shape[0]
+groupData = df['CNT_CHILDREN'] 
+df['CNT_CHILDREN_GROUP'] = ''
+df.ix[groupData == 0,'CNT_CHILDREN_GROUP'] = '0個小孩'
+df.ix[(groupData>0)&(groupData<3),'CNT_CHILDREN_GROUP'] = '有1-2個小孩'
+df.ix[(groupData>2)&(groupData<6),'CNT_CHILDREN_GROUP'] = '有3-5個小孩'
+df.ix[groupData>5,'CNT_CHILDREN_GROUP'] = '超過5個小孩'
+
+# 2 
+subDF = df[['AMT_INCOME_TOTAL','CNT_CHILDREN_GROUP','TARGET']]
+groupDF = subDF.groupby(['CNT_CHILDREN_GROUP','TARGET'])
+incomeData = []
+for (idx,keys) in enumerate(groupDF.groups.keys()):
+    
+    incomeData.append(np.array(groupDF.get_group(keys)['AMT_INCOME_TOTAL']))
+
+fig = plt.figure(1, figsize=(16, 9))
+ax = fig.add_subplot(111)
+ax.boxplot(incomeData)
+ax.set_xticklabels(groupDF.groups.keys())
+
+# 3
+groupDF = subDF.groupby(['CNT_CHILDREN_GROUP','TARGET'])
+zTrans = []
+for (idx,keys) in enumerate(groupDF.groups.keys()):
+    
+    tmp = groupDF.get_group(keys)['AMT_INCOME_TOTAL']
+    zTrans.append(np.array((tmp-tmp.mean())/tmp.std()))
