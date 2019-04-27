@@ -1,0 +1,44 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+import warnings
+warnings.filterwarnings('ignore')
+
+path = 'C:/Users/shelly.yang/Documents/GitHub/2nd-ML100Days/data/'
+df = pd.read_csv(path+'application_train.csv')
+AGE = np.array(df['DAYS_BIRTH'] / -365.25)
+
+# 自 20 到 70 歲，切 11 個點，進行分群比較 (KDE plot)
+ageBin = np.linspace(20,70,11)
+plt.figure(figsize=(16,9))
+for i in range(len(ageBin)+1):
+    if i == 0:
+        sns.kdeplot(AGE[(AGE>=0)&(AGE<ageBin[i])],label='less than 20 yrs')
+    elif i==11:
+        sns.kdeplot(AGE[(AGE>=ageBin[i-1])],label='larger than 70 yrs')
+    else:
+        sns.kdeplot(AGE[(AGE>=ageBin[i-1])&(AGE<ageBin[i])],\
+                        label='age between '+str(ageBin[i-1])+\
+                        ' and ' +str(ageBin[i]),lw=2)
+
+# 以年齡區間為 x, target 為 y 繪製 barplot
+df['AGE'] = df['DAYS_BIRTH'] / -365.25
+for i in range(len(ageBin)+1):
+    if i == 0:
+        tmpDF = df.ix[(df['AGE']>=0)&(df['AGE']<ageBin[i]),['TARGET','AMT_INCOME_TOTAL']]
+    elif i == 11:
+        tmpDF = df.ix[df['AGE']>=ageBin[i-1],['TARGET','AMT_INCOME_TOTAL']]
+    else:
+        tmpDF = df.ix[(df['AGE']>=ageBin[i-1])&(df['AGE']<ageBin[i]),['TARGET','AMT_INCOME_TOTAL']]
+    
+    if tmpDF.shape[0] > 0:
+        groupData = [np.array(tmpDF.ix[tmpDF['TARGET']==0,'AMT_INCOME_TOTAL']),
+                     np.array(tmpDF.ix[tmpDF['TARGET']==1,'AMT_INCOME_TOTAL'])]
+
+        fig = plt.figure(1, figsize=(16, 9))
+        ax = fig.add_subplot(111)
+        ax.boxplot(groupData)
+        ax.set_xticklabels(['TARGET=0','TARGET=1'])
+        
