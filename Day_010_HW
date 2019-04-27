@@ -1,0 +1,25 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+path = 'C:/Users/shelly.yang/Documents/GitHub/2nd-ML100Days/data/'
+df = pd.read_csv(path+'application_train.csv')
+
+# sort by AMT_INCOME_TOTAL
+sortDF = df.sort_values(by=['AMT_INCOME_TOTAL'])
+# AMT_INCOME_TOTAL最大5筆
+sortDF.head(5)
+# AMT_INCOME_TOTAL最小5筆
+sortDF.tail(5)
+
+# scatter plot ==> scale差異太大
+plt.plot(sortDF['DAYS_EMPLOYED'] / (-365), sortDF['AMT_INCOME_TOTAL'], '.')
+plt.xlabel('Days of employed (year)')
+plt.ylabel('AMT_INCOME_TOTAL (raw)')
+
+# 對二變數取natural log
+plt.plot(np.log(sortDF['DAYS_EMPLOYED'] / (-365)),\
+         np.log(sortDF['AMT_INCOME_TOTAL']), '.')
+plt.xlabel('log(Days of employed (year))')
+plt.ylabel('log(AMT_INCOME_TOTAL (raw))')
