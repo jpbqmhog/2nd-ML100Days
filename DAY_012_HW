@@ -1,0 +1,13 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+import warnings
+warnings.filterwarnings('ignore')
+
+path = 'C:/Users/shelly.yang/Documents/GitHub/2nd-ML100Days/data/'
+df = pd.read_csv(path+'application_train.csv')
+df['AGE'] = np.array(df['DAYS_BIRTH'] / -365.25)
+
+pd.cut(df['AGE'],[0,10,20,30,50,100])
