@@ -1,0 +1,17 @@
+import numpy as np
+np.random.seed(1)
+
+import matplotlib
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# 隨機生成兩組 1000 個介於 0~50 的數的整數 x, y, 看看相關矩陣如何
+meanVec = [0,0]
+covMat = [[1,-0.7],[-0.7,1]]
+x,y = np.random.multivariate_normal(meanVec,covMat,10000).T
+
+# 呼叫 numpy 裡的相關矩陣函數 (corrcoef)
+np.corrcoef(x, y)
+
+# 將分布畫出來看看吧
+plt.scatter(x, y)
