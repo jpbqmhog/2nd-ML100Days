@@ -1,0 +1,23 @@
+import numpy as np
+import pandas as pd
+
+path = 'C:/Users/shelly.yang/Documents/GitHub/2nd-ML100Days/data/'
+df = pd.read_csv(path+'application_train.csv')
+
+# 1. q0-q100
+quantile = []
+for x in range(101):
+
+    quantile.append(df['AMT_ANNUITY'].quantile((x)/100))
+
+print(quantile)
+
+# 2-1 fill NAs with median
+df['AMT_ANNUITY'].fillna(df['AMT_ANNUITY'].quantile(0.5))
+
+# 2-2 standardized by range
+Range = df['AMT_ANNUITY'].max() - df['AMT_ANNUITY'].min()
+df['AMT_ANNUITY']/Range
+
+# 2-3 fill NAs in AMT_GOODS_PRICE with mode
+df['AMT_GOODS_PRICE'].fillna(df['AMT_GOODS_PRICE'].mode())
