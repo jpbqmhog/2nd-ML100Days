@@ -1,0 +1,26 @@
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+import warnings
+warnings.filterwarnings('ignore')
+
+path = 'C:/Users/shelly.yang/Documents/GitHub/2nd-ML100Days/data/'
+df = pd.read_csv(path+'application_train.csv')
+
+useData = df[['HOUSETYPE_MODE','AMT_CREDIT']]
+# sort values by 'HOUSETYPE_MODE'
+sortedData = useData.sort_values(['HOUSETYPE_MODE'])
+# fill na as string 'Nan'
+sortedData = sortedData.fillna('Nan')
+DataGroup = np.unique(sortedData['HOUSETYPE_MODE'])
+
+plt.figure(figsize=(16,9))
+for group in DataGroup:
+    
+    histData = sortedData.ix[sortedData['HOUSETYPE_MODE'] == group,'AMT_CREDIT']
+    plt.hist(histData,alpha = 0.3, label=group)
+
+plt.legend()
