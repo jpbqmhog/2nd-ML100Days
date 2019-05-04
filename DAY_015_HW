@@ -1,0 +1,54 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+import warnings
+warnings.filterwarnings('ignore')
+
+if __name__ == '__main__':
+
+    # =*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-
+    # 1. HeatMap
+    # =*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-
+    # generate 10*10 random sample between -1 and 1
+    randomSample = np.random.uniform(-1,1,100).reshape(10,10)
+    # heatmap
+    plt.figure(figsize=(16,9))
+    sns.heatmap(randomSample)
+    
+    # =*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-
+    # 2. Pairs Plot
+    # =*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-
+    # generate 1000*3 random sample between -1 and 1
+    randomSample2 = np.random.uniform(-1,1,3000).reshape(1000,3)
+    df = pd.DataFrame({'Sample1':randomSample2[:,0].tolist(),
+                       'Sample2':randomSample2[:,1].tolist(),
+                       'Sample3':randomSample2[:,2].tolist()})
+    
+    grid = sns.PairGrid(data = df, size = 3, diag_sharey=False,
+                        vars = [x for x in list(df.columns)])
+    # 上半部為 scatter
+    grid.map_upper(plt.scatter, alpha = 0.2)
+    # 對角線畫 histogram
+    grid.map_diag(plt.hist)
+    # 下半部放 density plot
+    grid.map_lower(sns.kdeplot, cmap = plt.cm.OrRd_r)
+    
+    # =*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-
+    # 3. Pairs Plot
+    # =*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-=*-
+    # generate 10*10 random normal samples 
+    normalSample = np.random.randn(3000).reshape(1000,3)
+    df = pd.DataFrame({'Sample1':normalSample[:,0].tolist(),
+                       'Sample2':normalSample[:,1].tolist(),
+                       'Sample3':normalSample[:,2].tolist()})
+    
+    grid = sns.PairGrid(data = df, size = 3, diag_sharey=False,
+                        vars = [x for x in list(df.columns)])
+    # 上半部為 scatter
+    grid.map_upper(plt.scatter, alpha = 0.2)
+    # 對角線畫 histogram
+    grid.map_diag(plt.hist)
+    # 下半部放 density plot
+    grid.map_lower(sns.kdeplot, cmap = plt.cm.OrRd_r)
